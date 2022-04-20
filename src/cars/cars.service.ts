@@ -78,6 +78,18 @@ export class CarsService {
     const car = this.carsRepository.create({
       ...createCarDto,
     });
+    const arrayIds = createCarDto.photos.map((item) => item.id);
+    console.log(arrayIds);
+
+    for (let index = 0; index < createCarDto.photos.length; index++) {
+      const photo = createCarDto.photos[index];
+
+      const photoUpdate = await this.photoRepository.create({
+        id: +photo.id,
+        url: photo.url,
+      });
+      this.photoRepository.save(photoUpdate);
+    }
 
     return this.carsRepository.save(car);
   }
