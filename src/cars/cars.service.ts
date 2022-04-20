@@ -75,9 +75,10 @@ export class CarsService {
   }
 
   async create(createCarDto: CreateCarDto) {
-    const coffee = this.carsRepository.create({
+    const car = this.carsRepository.create({
       ...createCarDto,
     });
-    return this.carsRepository.save(coffee);
+
+    return this.carsRepository.save(car);
   }
 }
