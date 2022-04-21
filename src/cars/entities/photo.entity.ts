@@ -11,15 +11,16 @@ import { Cars } from './cars.entity';
 
 @Entity()
 export class Photo {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({ default: '' })
   url: string;
 
   @ManyToOne(() => Cars, (cars) => cars.photos, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    // onDelete: 'CASCADE',
+    // onUpdate: 'CASCADE',
+    // cascade: true,
   })
   @JoinColumn({ name: 'car_id' })
   cars: Cars;

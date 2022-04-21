@@ -31,6 +31,7 @@ export class Cars {
   @OneToMany(() => Photo, (photo) => photo.cars, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    cascade: true,
   })
   photos: Photo[];
 }
