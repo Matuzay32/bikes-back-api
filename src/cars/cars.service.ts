@@ -75,13 +75,17 @@ export class CarsService {
   }
 
   async create(createCarDto: CreateCarDto) {
-    const arrayFotos = createCarDto.photos;
-    const carGuardado = this.carsRepository.save({
+    const arrayFotos = await createCarDto.photos;
+    console.log(arrayFotos);
+    const car = await this.carsRepository.create({
       ...createCarDto,
       photos: createCarDto.photos,
     });
-    const photoGuardada = this.photoRepository.save(arrayFotos);
+    const photos = await this.photoRepository.create(arrayFotos);
 
-    return await createCarDto;
+    const carGuardado = await this.carsRepository.save(car);
+    await this.photoRepository.save(photos);
+
+    return await carGuardado;
   }
 }
