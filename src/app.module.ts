@@ -2,11 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CarsController } from './cars/cars.controller';
-import { CarsService } from './cars/cars.service';
 import { CarsModule } from './cars/cars.module';
-import { Cars } from './cars/entities/cars.entity';
-import { Photo } from './cars/entities/photo.entity';
+import { BikesService } from './bikes/bikes.service';
+import { BikesModule } from './bikes/bikes.module';
 
 @Module({
   imports: [
@@ -22,6 +20,7 @@ import { Photo } from './cars/entities/photo.entity';
       synchronize: true,
     }),
     CarsModule,
+    BikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
