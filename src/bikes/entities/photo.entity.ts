@@ -22,6 +22,6 @@ export class Photo {
     // onUpdate: 'CASCADE',
     // cascade: true,
   })
-  @JoinColumn({ name: 'car_id' })
+  @JoinColumn({ name: 'bike_id' })
   bikes: Bikes;
 }
