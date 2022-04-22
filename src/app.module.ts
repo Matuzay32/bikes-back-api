@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarsModule } from './cars/cars.module';
-import { BikesService } from './bikes/bikes.service';
 import { BikesModule } from './bikes/bikes.module';
 
 @Module({

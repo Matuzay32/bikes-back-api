@@ -16,7 +16,6 @@ export class BikesService {
     @InjectRepository(Bikes)
     private readonly bikesRepository: Repository<Bikes>,
     private readonly photoRepository: Repository<Photo>,
-    private readonly connection: Connection,
   ) {}
 
   async findAll(): Promise<CreateBikeDto[]> {
