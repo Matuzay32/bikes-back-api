@@ -5,7 +5,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Connection from 'mysql2/typings/mysql/lib/Connection';
 import { Repository } from 'typeorm';
 import { Bikes } from './entities/bikes.entity';
 import { Photo } from './entities/photo.entity';

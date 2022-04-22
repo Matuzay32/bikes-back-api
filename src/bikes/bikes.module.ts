@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BikesController } from './bikes.controller';
 import { BikesService } from './bikes.service';
+import { BikesController } from './bikes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Bikes } from './entities/bikes.entity';
 import { Photo } from './entities/photo.entity';

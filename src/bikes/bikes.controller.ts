@@ -11,7 +11,7 @@ import { BikesService } from './bikes.service';
 import { CreateBikeDto } from './dto/create-bike.dto';
 
 @Controller('bikes')
-export class CarsController {
+export class BikesController {
   constructor(private readonly bikesService: BikesService) {}
 
   @Get()
