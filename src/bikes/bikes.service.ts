@@ -38,8 +38,8 @@ export class BikesService {
   }
 
   async deleteOne(id: string) {
-    const coffee = await this.findOne(id);
-    return this.bikesRepository.remove(coffee);
+    const bike = await this.findOne(id);
+    return this.bikesRepository.remove(bike);
   }
 
   async updateOne(id: string, updateBikeDto: CreateBikeDto) {
