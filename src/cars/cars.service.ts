@@ -41,8 +41,8 @@ export class CarsService {
   }
 
   async deleteOne(id: string) {
-    const coffee = await this.findOne(id);
-    return this.carsRepository.remove(coffee);
+    const car = await this.findOne(id);
+    return this.carsRepository.remove(car);
   }
 
   async updateOne(id: string, updateCarDto: CreateCarDto) {
