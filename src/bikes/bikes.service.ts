@@ -14,6 +14,7 @@ export class BikesService {
   constructor(
     @InjectRepository(Bikes)
     private readonly bikesRepository: Repository<Bikes>,
+    @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
   ) {}
 
