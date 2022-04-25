@@ -52,7 +52,7 @@ export class FarmsService {
       });
       this.photoRepository.save(photoUpdate);
     }
-    // console.log(findPhotos, ' photos id buscados en la tabla');
+    // //console.log(findPhotos, ' photos id buscados en la tabla');
 
     const farmUpdate = await this.farmsRepository.preload({
       id: +id,
@@ -74,7 +74,7 @@ export class FarmsService {
   async create(createFarmDto: CreateFarmDto[]) {
     createFarmDto.map(async (createFarmDto) => {
       const arrayFotos = await createFarmDto.photos;
-      console.log(arrayFotos);
+      //console.log(arrayFotos);
       const farm = await this.farmsRepository.create({
         ...createFarmDto,
         photos: createFarmDto.photos,
