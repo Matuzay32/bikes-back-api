@@ -71,7 +71,7 @@ export class BoatsService {
     return this.boatsRepository.save(boatUpdate);
   }
 
-  async create(createBoatDto: CreateBoatDto) {
+  async create(createBoatDto: CreateBoatDto): Promise<CreateBoatDto> {
     const arrayFotos = await createBoatDto.photos;
     console.log(arrayFotos);
     const boat = await this.boatsRepository.create({

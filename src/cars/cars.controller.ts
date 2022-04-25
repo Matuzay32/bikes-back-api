@@ -15,7 +15,7 @@ export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
-  findAll() {
+  findAll(): Promise<CreateCarDto[]> {
     return this.carsService.findAll();
   }
 
@@ -35,7 +35,7 @@ export class CarsController {
   }
 
   @Post()
-  create(@Body() createCarDto: CreateCarDto) {
+  create(@Body() createCarDto: CreateCarDto): Promise<CreateCarDto> {
     return this.carsService.create(createCarDto);
   }
 }

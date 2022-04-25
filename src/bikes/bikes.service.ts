@@ -71,7 +71,7 @@ export class BikesService {
     return this.bikesRepository.save(bikeUpdate);
   }
 
-  async create(createBikeDto: CreateBikeDto) {
+  async create(createBikeDto: CreateBikeDto): Promise<CreateBikeDto> {
     const arrayFotos = await createBikeDto.photos;
     console.log(arrayFotos);
     const bike = await this.bikesRepository.create({

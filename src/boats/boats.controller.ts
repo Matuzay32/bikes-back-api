@@ -15,7 +15,7 @@ export class BoatsController {
   constructor(private readonly boatsService: BoatsService) {}
 
   @Get()
-  findAll() {
+  findAll(): Promise<CreateBoatDto[]> {
     return this.boatsService.findAll();
   }
 
@@ -35,7 +35,7 @@ export class BoatsController {
   }
 
   @Post()
-  create(@Body() createBoatDto: CreateBoatDto) {
+  create(@Body() createBoatDto: CreateBoatDto): Promise<CreateBoatDto> {
     return this.boatsService.create(createBoatDto);
   }
 }
