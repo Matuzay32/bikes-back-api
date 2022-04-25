@@ -74,7 +74,7 @@ export class BoatsService {
   async create(createBoatDto: CreateBoatDto[]) {
     createBoatDto.map(async (createBoatDto) => {
       const arrayFotos = await createBoatDto.photos;
-      console.log(arrayFotos);
+      // console.log(arrayFotos);
       const boat = await this.boatsRepository.create({
         ...createBoatDto,
         photos: createBoatDto.photos,

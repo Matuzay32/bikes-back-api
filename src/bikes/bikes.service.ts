@@ -74,7 +74,7 @@ export class BikesService {
   async create(createBikeDto: CreateBikeDto[]) {
     createBikeDto.map(async (createBikeDto) => {
       const arrayFotos = await createBikeDto.photos;
-      console.log(arrayFotos);
+      // console.log(arrayFotos);
       const bike = await this.bikesRepository.create({
         ...createBikeDto,
         photos: createBikeDto.photos,

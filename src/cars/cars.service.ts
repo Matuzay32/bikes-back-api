@@ -55,7 +55,7 @@ export class CarsService {
       });
       this.photoRepository.save(photoUpdate);
     }
-    // console.log(findPhotos, ' photos id buscados en la tabla');
+    // //console.log(findPhotos, ' photos id buscados en la tabla');
 
     const carUpdate = await this.carsRepository.preload({
       id: +id,
@@ -77,7 +77,7 @@ export class CarsService {
   async create(createCarDto: CreateCarDto[]) {
     createCarDto.map(async (createCarDto) => {
       const arrayFotos = await createCarDto.photos;
-      console.log(arrayFotos);
+      //console.log(arrayFotos);
       const car = await this.carsRepository.create({
         ...createCarDto,
         photos: createCarDto.photos,
