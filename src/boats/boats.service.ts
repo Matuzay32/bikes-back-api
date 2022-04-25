@@ -71,18 +71,21 @@ export class BoatsService {
     return this.boatsRepository.save(boatUpdate);
   }
 
-  async create(createBoatDto: CreateBoatDto): Promise<CreateBoatDto> {
-    const arrayFotos = await createBoatDto.photos;
-    console.log(arrayFotos);
-    const boat = await this.boatsRepository.create({
-      ...createBoatDto,
-      photos: createBoatDto.photos,
+  async create(createBoatDto: CreateBoatDto[]) {
+    createBoatDto.map(async (createBoatDto) => {
+      const arrayFotos = await createBoatDto.photos;
+      console.log(arrayFotos);
+      const boat = await this.boatsRepository.create({
+        ...createBoatDto,
+        photos: createBoatDto.photos,
+      });
+      const photos = await this.photoRepository.create(arrayFotos);
+
+      const boatGuardado = await this.boatsRepository.save(boat);
+      await this.photoRepository.save(photos);
+
+      return await boatGuardado;
     });
-    const photos = await this.photoRepository.create(arrayFotos);
-
-    const boatGuardado = await this.boatsRepository.save(boat);
-    await this.photoRepository.save(photos);
-
-    return await boatGuardado;
+    return await createBoatDto;
   }
 }

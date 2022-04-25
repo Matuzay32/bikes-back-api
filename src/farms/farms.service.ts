@@ -71,18 +71,21 @@ export class FarmsService {
     return this.farmsRepository.save(farmUpdate);
   }
 
-  async create(createFarmDto: CreateFarmDto) {
-    const arrayFotos = await createFarmDto.photos;
-    console.log(arrayFotos);
-    const bike = await this.farmsRepository.create({
-      ...createFarmDto,
-      photos: createFarmDto.photos,
+  async create(createFarmDto: CreateFarmDto[]) {
+    createFarmDto.map(async (createFarmDto) => {
+      const arrayFotos = await createFarmDto.photos;
+      console.log(arrayFotos);
+      const farm = await this.farmsRepository.create({
+        ...createFarmDto,
+        photos: createFarmDto.photos,
+      });
+      const photos = await this.photoRepository.create(arrayFotos);
+
+      const farmGuardado = await this.farmsRepository.save(farm);
+      await this.photoRepository.save(photos);
+
+      return await farmGuardado;
     });
-    const photos = await this.photoRepository.create(arrayFotos);
-
-    const farmGuardado = await this.farmsRepository.save(bike);
-    await this.photoRepository.save(photos);
-
-    return await farmGuardado;
+    return await createFarmDto;
   }
 }

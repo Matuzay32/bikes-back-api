@@ -71,18 +71,21 @@ export class BikesService {
     return this.bikesRepository.save(bikeUpdate);
   }
 
-  async create(createBikeDto: CreateBikeDto): Promise<CreateBikeDto> {
-    const arrayFotos = await createBikeDto.photos;
-    console.log(arrayFotos);
-    const bike = await this.bikesRepository.create({
-      ...createBikeDto,
-      photos: createBikeDto.photos,
+  async create(createBikeDto: CreateBikeDto[]) {
+    createBikeDto.map(async (createBikeDto) => {
+      const arrayFotos = await createBikeDto.photos;
+      console.log(arrayFotos);
+      const bike = await this.bikesRepository.create({
+        ...createBikeDto,
+        photos: createBikeDto.photos,
+      });
+      const photos = await this.photoRepository.create(arrayFotos);
+
+      const bikeGuardado = await this.bikesRepository.save(bike);
+      await this.photoRepository.save(photos);
+
+      return await bikeGuardado;
     });
-    const photos = await this.photoRepository.create(arrayFotos);
-
-    const bikeGuardado = await this.bikesRepository.save(bike);
-    await this.photoRepository.save(photos);
-
-    return await bikeGuardado;
+    return await createBikeDto;
   }
 }

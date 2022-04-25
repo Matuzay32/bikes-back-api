@@ -35,7 +35,7 @@ export class CarsController {
   }
 
   @Post()
-  create(@Body() createCarDto: CreateCarDto): Promise<CreateCarDto> {
+  create(@Body() createCarDto: CreateCarDto[]) {
     return this.carsService.create(createCarDto);
   }
 }

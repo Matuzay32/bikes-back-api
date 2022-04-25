@@ -35,7 +35,7 @@ export class BoatsController {
   }
 
   @Post()
-  create(@Body() createBoatDto: CreateBoatDto): Promise<CreateBoatDto> {
+  create(@Body() createBoatDto: CreateBoatDto[]) {
     return this.boatsService.create(createBoatDto);
   }
 }

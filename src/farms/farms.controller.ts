@@ -35,7 +35,7 @@ export class FarmsController {
   }
 
   @Post()
-  create(@Body() createFarmDto: CreateFarmDto): Promise<CreateFarmDto> {
+  create(@Body() createFarmDto: CreateFarmDto[]) {
     return this.farmsService.create(createFarmDto);
   }
 }

@@ -35,7 +35,7 @@ export class BikesController {
   }
 
   @Post()
-  create(@Body() createCarDto: CreateBikeDto): Promise<CreateBikeDto> {
-    return this.bikesService.create(createCarDto);
+  create(@Body() createBikeDto: CreateBikeDto[]) {
+    return this.bikesService.create(createBikeDto);
   }
 }
