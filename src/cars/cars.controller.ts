@@ -6,18 +6,30 @@ import {
   Param,
   Patch,
   Post,
+  // Protocol,
+  Query,
 } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
-  findAll(): Promise<CreateCarDto[]> {
-    return this.carsService.findAll();
+  findAll(
+    @Protocol('https') protocol: string,
+    @Query() paginationQuery: PaginationQueryDto,
+  ) {
+    console.log(protocol);
+    return this.carsService.findAll(paginationQuery);
   }
+
+  // @Get()
+  // findAll(): Promise<CreateCarDto[]> {
+  //   return this.carsService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param() params) {

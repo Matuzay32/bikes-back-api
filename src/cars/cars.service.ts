@@ -10,6 +10,7 @@ import { Connection, Repository } from 'typeorm';
 import { CreateCarDto } from './dto/create-car.dto';
 import { Cars } from './entities/cars.entity';
 import { Photo } from './entities/photo.entity';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @Injectable()
 export class CarsService {
@@ -21,9 +22,14 @@ export class CarsService {
     private readonly connection: Connection,
   ) {}
 
-  async findAll(): Promise<CreateCarDto[]> {
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+  ): Promise<CreateCarDto[]> {
+    const { limit, offset } = paginationQueryDto;
     return await this.carsRepository.find({
       relations: ['photos'],
+      skip: offset,
+      take: limit,
     });
   }
 
