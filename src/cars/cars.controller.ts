@@ -18,11 +18,7 @@ export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
   @Get()
-  findAll(
-    @Protocol('https') protocol: string,
-    @Query() paginationQuery: PaginationQueryDto,
-  ) {
-    console.log(protocol);
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.carsService.findAll(paginationQuery);
   }
 
