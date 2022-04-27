@@ -6,17 +6,21 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { FarmsService } from './farms.service';
 import { CreateFarmDto } from './dto/create-farm.dto';
+import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 
 @Controller('farms')
 export class FarmsController {
   constructor(private readonly farmsService: FarmsService) {}
 
   @Get()
-  findAll(): Promise<CreateFarmDto[]> {
-    return this.farmsService.findAll();
+  findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<CreateFarmDto[]> {
+    return this.farmsService.findAll(paginationQuery);
   }
 
   @Get(':id')

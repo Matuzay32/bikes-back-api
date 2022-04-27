@@ -10,7 +10,7 @@ import { Connection, Repository } from 'typeorm';
 import { CreateCarDto } from './dto/create-car.dto';
 import { Cars } from './entities/cars.entity';
 import { Photo } from './entities/photo.entity';
-import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class CarsService {

@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { Farms } from './entities/farms.entity';
 import { Photo } from './entities/photo.entity';
 import { CreateFarmDto } from './dto/create-farm.dto';
+import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 @Injectable()
 export class FarmsService {
   constructor(
@@ -18,9 +19,12 @@ export class FarmsService {
     private readonly photoRepository: Repository<Photo>,
   ) {}
 
-  async findAll(): Promise<CreateFarmDto[]> {
+  async findAll(paginationQuery: PaginationQueryDto): Promise<CreateFarmDto[]> {
+    const { limit, offset } = paginationQuery;
     return await this.farmsRepository.find({
       relations: ['photos'],
+      take: limit,
+      skip: offset,
     });
   }
 

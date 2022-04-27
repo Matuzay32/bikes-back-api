@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
-import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('cars')
 export class CarsController {

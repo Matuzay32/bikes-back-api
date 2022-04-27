@@ -9,6 +9,8 @@ import { Repository } from 'typeorm';
 import { Bikes } from './entities/bikes.entity';
 import { Photo } from './entities/photo.entity';
 import { CreateBikeDto } from './dto/create-bike.dto';
+import { skip } from 'rxjs';
+import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 @Injectable()
 export class BikesService {
   constructor(
@@ -18,9 +20,12 @@ export class BikesService {
     private readonly photoRepository: Repository<Photo>,
   ) {}
 
-  async findAll(): Promise<CreateBikeDto[]> {
+  async findAll(paginationQuery: PaginationQueryDto): Promise<CreateBikeDto[]> {
+    const { limit, offset } = paginationQuery;
     return await this.bikesRepository.find({
       relations: ['photos'],
+      take: limit,
+      skip: offset,
     });
   }
 
