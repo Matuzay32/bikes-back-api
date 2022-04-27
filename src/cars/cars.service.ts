@@ -11,6 +11,7 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { Cars } from './entities/cars.entity';
 import { Photo } from './entities/photo.entity';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { PhotoDto } from './../common/dto/create-photo.dto';
 
 @Injectable()
 export class CarsService {
@@ -48,6 +49,11 @@ export class CarsService {
 
   async deleteOne(id: string) {
     const car = await this.findOne(id);
+    if (!car) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere borrar con id(${id}) `,
+      );
+    }
     return this.carsRepository.remove(car);
   }
 
@@ -96,5 +102,17 @@ export class CarsService {
       return await carGuardado;
     });
     return await createCarDto;
+  }
+
+  //Borra una photo dada por el Id
+  async deletePhoto(id: string) {
+    console.log(id);
+    const photo = await this.photoRepository.findOne(id);
+    if (!photo) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere borrar con id(${id}) `,
+      );
+    }
+    return await this.photoRepository.remove(photo);
   }
 }

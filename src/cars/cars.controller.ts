@@ -12,6 +12,7 @@ import {
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { PhotoDto } from './../common/dto/create-photo.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -45,5 +46,11 @@ export class CarsController {
   @Post()
   create(@Body() createCarDto: CreateCarDto[]) {
     return this.carsService.create(createCarDto);
+  }
+
+  @Delete('photo/:id')
+  deletePhoto(@Param() params) {
+    console.log(params.id);
+    return this.carsService.deletePhoto(params.id);
   }
 }
