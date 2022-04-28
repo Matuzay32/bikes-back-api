@@ -18,7 +18,7 @@ import { FarmsModule } from './farms/farms.module';
       database: 'prueba',
       autoLoadEntities: true, // models will be loaded automatically
       // entities: [Cars, Photo],
-      synchronize: true,
+      // synchronize: true,
     }),
     CarsModule,
     BikesModule,
