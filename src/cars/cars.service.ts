@@ -12,6 +12,7 @@ import { Cars } from './entities/cars.entity';
 import { Photo } from './entities/photo.entity';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
+import { CreateBoatDto } from './../boats/dto/create-boats.dto';
 
 @Injectable()
 export class CarsService {
@@ -91,7 +92,6 @@ export class CarsService {
   async create(createCarDto: CreateCarDto[]) {
     createCarDto.map(async (createCarDto) => {
       const arrayFotos = await createCarDto.photos;
-      //console.log(arrayFotos);
       const car = await this.carsRepository.create({
         ...createCarDto,
         photos: createCarDto.photos,
@@ -132,5 +132,31 @@ export class CarsService {
       );
     }
     return await this.photoRepository.save(photoUpdate);
+  }
+
+  async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
+    const find = await this.carsRepository.findOne(id, {
+      relations: ['photos'],
+    });
+    if (!find) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento con id(${id}) `,
+      );
+    }
+    const fotosActualizar = await createdPhotoDto;
+    const photos = await this.photoRepository.create(fotosActualizar);
+    const allPhotos = [...find.photos, ...photos];
+
+    const agreePhotosToCarsEntity = await this.carsRepository.create({
+      ...find,
+      photos: allPhotos,
+    });
+
+    const PhotosUpdated = await this.carsRepository.save(
+      agreePhotosToCarsEntity,
+    );
+    await this.photoRepository.save(photos);
+
+    return await PhotosUpdated;
   }
 }

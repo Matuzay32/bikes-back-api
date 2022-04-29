@@ -58,4 +58,8 @@ export class CarsController {
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
     return this.carsService.updateOnePhoto(id, updatePhotoDto);
   }
+  @Post('photo/:id')
+  createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
+    return this.carsService.createOnePhoto(updatePhotoDto, id);
+  }
 }
