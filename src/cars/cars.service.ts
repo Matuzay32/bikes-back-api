@@ -119,7 +119,7 @@ export class CarsService {
   }
 
   //Update one photo
-  async updatePhotoOne(id: string, updatePhotoDto: PhotoDto) {
+  async updateOnePhoto(id: string, updatePhotoDto: PhotoDto) {
     const photoUpdate = await this.photoRepository.preload({
       id: +updatePhotoDto.id,
       url: updatePhotoDto.url,

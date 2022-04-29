@@ -56,6 +56,6 @@ export class CarsController {
 
   @Patch('photo/:id')
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
-    return this.carsService.updatePhotoOne(id, updatePhotoDto);
+    return this.carsService.updateOnePhoto(id, updatePhotoDto);
   }
 }
