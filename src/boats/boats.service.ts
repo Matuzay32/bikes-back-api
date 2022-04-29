@@ -47,6 +47,17 @@ export class BoatsService {
   }
 
   async updateOne(id: string, updateBoatDto: CreateBoatDto) {
+    const item = await this.boatsRepository.findOne(
+      id /* , {
+       relations: ['photos'],
+       ...updateBoatDto,
+     } */,
+    );
+    if (!item) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
+      );
+    }
     for (let index = 0; index < updateBoatDto.photos.length; index++) {
       const photo = updateBoatDto.photos[index];
 
@@ -56,22 +67,12 @@ export class BoatsService {
       });
       this.photoRepository.save(photoUpdate);
     }
-    // console.log(findPhotos, ' photos id buscados en la tabla');
 
     const boatUpdate = await this.boatsRepository.preload({
       id: +id,
       ...updateBoatDto,
     });
 
-    const item = await this.boatsRepository.findOne(id, {
-      relations: ['photos'],
-      ...updateBoatDto,
-    });
-    if (!item) {
-      throw new NotFoundException(
-        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
-      );
-    }
     return this.boatsRepository.save(boatUpdate);
   }
 

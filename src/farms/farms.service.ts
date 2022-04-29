@@ -47,6 +47,17 @@ export class FarmsService {
   }
 
   async updateOne(id: string, updateFarmDto: CreateFarmDto) {
+    const item = await this.farmsRepository.findOne(
+      id /* , {
+       relations: ['photos'],
+       ...updateFarmDto,
+     } */,
+    );
+    if (!item) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
+      );
+    }
     for (let index = 0; index < updateFarmDto.photos.length; index++) {
       const photo = updateFarmDto.photos[index];
 
@@ -56,22 +67,12 @@ export class FarmsService {
       });
       this.photoRepository.save(photoUpdate);
     }
-    // //console.log(findPhotos, ' photos id buscados en la tabla');
 
     const farmUpdate = await this.farmsRepository.preload({
       id: +id,
       ...updateFarmDto,
     });
 
-    const item = await this.farmsRepository.findOne(id, {
-      relations: ['photos'],
-      ...updateFarmDto,
-    });
-    if (!item) {
-      throw new NotFoundException(
-        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
-      );
-    }
     return this.farmsRepository.save(farmUpdate);
   }
 
