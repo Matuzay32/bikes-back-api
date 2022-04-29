@@ -115,4 +115,20 @@ export class CarsService {
     }
     return await this.photoRepository.remove(photo);
   }
+
+  //Update one photo
+  async updatePhotoOne(id: string, updatePhotoDto: PhotoDto) {
+    const photoUpdate = await this.photoRepository.preload({
+      id: +updatePhotoDto.id,
+      url: updatePhotoDto.url,
+    });
+
+    const item = await this.photoRepository.findOne(id);
+    if (!item) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
+      );
+    }
+    return await this.photoRepository.save(photoUpdate);
+  }
 }

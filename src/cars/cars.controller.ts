@@ -53,4 +53,9 @@ export class CarsController {
     console.log(params.id);
     return this.carsService.deletePhoto(params.id);
   }
+
+  @Patch('photo/:id')
+  updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
+    return this.carsService.updatePhotoOne(id, updatePhotoDto);
+  }
 }
