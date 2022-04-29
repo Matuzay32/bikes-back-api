@@ -28,9 +28,6 @@ export class Cars {
   @Column({ default: '' })
   frase: string;
 
-  @Column({ default: '' })
-  desc: string;
-
   @OneToMany(() => Photo, (photo) => photo.cars, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
