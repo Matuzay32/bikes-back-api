@@ -58,6 +58,17 @@ export class CarsService {
   }
 
   async updateOne(id: string, updateCarDto: CreateCarDto) {
+    const item = await this.carsRepository.findOne(
+      id /* , {
+      relations: ['photos'],
+      // ...updateCarDto,
+    } */,
+    );
+    if (!item) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
+      );
+    }
     for (let index = 0; index < updateCarDto.photos.length; index++) {
       const photo = updateCarDto.photos[index];
 
@@ -74,15 +85,6 @@ export class CarsService {
       ...updateCarDto,
     });
 
-    const item = await this.carsRepository.findOne(id, {
-      relations: ['photos'],
-      ...updateCarDto,
-    });
-    if (!item) {
-      throw new NotFoundException(
-        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
-      );
-    }
     return this.carsRepository.save(carUpdate);
   }
 
