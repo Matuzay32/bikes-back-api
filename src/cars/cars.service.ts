@@ -133,7 +133,7 @@ export class CarsService {
     }
     return await this.photoRepository.save(photoUpdate);
   }
-
+  //Create Photos
   async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
     const find = await this.carsRepository.findOne(id, {
       relations: ['photos'],
