@@ -133,7 +133,7 @@ export class CarsService {
     }
     return await this.photoRepository.save(photoUpdate);
   }
-  //Create Photos
+  //Create Photos esto sirve para crear una photo
   async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
     const find = await this.carsRepository.findOne(id, {
       relations: ['photos'],
