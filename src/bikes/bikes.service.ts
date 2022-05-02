@@ -11,6 +11,7 @@ import { Photo } from './entities/photo.entity';
 import { CreateBikeDto } from './dto/create-bike.dto';
 import { skip } from 'rxjs';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
+import { PhotoDto } from './../common/dto/create-photo.dto';
 @Injectable()
 export class BikesService {
   constructor(
@@ -93,5 +94,60 @@ export class BikesService {
       return await bikeGuardado;
     });
     return await createBikeDto;
+  }
+
+  //Borra una photo dada por el Id
+  async deletePhoto(id: string) {
+    console.log(id);
+    const photo = await this.photoRepository.findOne(id);
+    if (!photo) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere borrar con id(${id}) `,
+      );
+    }
+    return await this.photoRepository.remove(photo);
+  }
+
+  //Update one photo
+  async updateOnePhoto(id: string, updatePhotoDto: PhotoDto) {
+    const photoUpdate = await this.photoRepository.preload({
+      id: +updatePhotoDto.id,
+      url: updatePhotoDto.url,
+    });
+
+    const item = await this.photoRepository.findOne(id);
+    if (!item) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
+      );
+    }
+    return await this.photoRepository.save(photoUpdate);
+  }
+
+  //Create Photos esto sirve para crear una photo
+  async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
+    const find = await this.bikesRepository.findOne(id, {
+      relations: ['photos'],
+    });
+    if (!find) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento con id(${id}) `,
+      );
+    }
+    const fotosActualizar = await createdPhotoDto;
+    const photos = await this.photoRepository.create(fotosActualizar);
+    const allPhotos = [...find.photos, ...photos];
+
+    const agreePhotosToBikesEntity = await this.bikesRepository.create({
+      ...find,
+      photos: allPhotos,
+    });
+
+    const PhotosUpdated = await this.bikesRepository.save(
+      agreePhotosToBikesEntity,
+    );
+    await this.photoRepository.save(photos);
+
+    return await PhotosUpdated;
   }
 }
