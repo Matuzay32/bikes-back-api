@@ -11,6 +11,7 @@ import {
 import { FarmsService } from './farms.service';
 import { CreateFarmDto } from './dto/create-farm.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
+import { PhotoDto } from './../common/dto/create-photo.dto';
 
 @Controller('farms')
 export class FarmsController {
@@ -41,5 +42,20 @@ export class FarmsController {
   @Post()
   create(@Body() createFarmDto: CreateFarmDto[]) {
     return this.farmsService.create(createFarmDto);
+  }
+
+  @Delete('photo/:id')
+  deletePhoto(@Param() params) {
+    console.log(params.id);
+    return this.farmsService.deletePhoto(params.id);
+  }
+
+  @Patch('photo/:id')
+  updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
+    return this.farmsService.updateOnePhoto(id, updatePhotoDto);
+  }
+  @Post('photo/:id')
+  createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
+    return this.farmsService.createOnePhoto(updatePhotoDto, id);
   }
 }

@@ -11,6 +11,7 @@ import {
 import { BoatsService } from './boats.service';
 import { CreateBoatDto } from './dto/create-boats.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
+import { PhotoDto } from './../common/dto/create-photo.dto';
 
 @Controller('boats')
 export class BoatsController {
@@ -41,5 +42,20 @@ export class BoatsController {
   @Post()
   create(@Body() createBoatDto: CreateBoatDto[]) {
     return this.boatsService.create(createBoatDto);
+  }
+
+  @Delete('photo/:id')
+  deletePhoto(@Param() params) {
+    console.log(params.id);
+    return this.boatsService.deletePhoto(params.id);
+  }
+
+  @Patch('photo/:id')
+  updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
+    return this.boatsService.updateOnePhoto(id, updatePhotoDto);
+  }
+  @Post('photo/:id')
+  createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
+    return this.boatsService.createOnePhoto(updatePhotoDto, id);
   }
 }
