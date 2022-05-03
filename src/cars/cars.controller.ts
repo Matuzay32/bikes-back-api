@@ -18,7 +18,6 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { SampleDto } from './../common/sample.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -56,7 +55,7 @@ export class CarsController {
 
   @Delete('photo/:id')
   deletePhoto(@Param() params) {
-    console.log(params.id);
+    //console.log(params.id);
     return this.carsService.deletePhoto(params.id);
   }
 
@@ -74,10 +73,18 @@ export class CarsController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads',
-        filename: (req, file, calback) => {
-          calback(null, `photo ${Date.now()}.jpg`);
+        filename: (req, file, callback) => {
+          callback(null, `photo ${Date.now()}.jpg`);
         },
       }),
+      fileFilter: (req, file, callback) => {
+        const nameOriginal = file.originalname.toLocaleLowerCase();
+        // //console.log(nameOriginal);
+        if (!nameOriginal.match(/(.gif|.png|.jpg|.jpeg)$/)) {
+          return callback(new Error('La extencion no es valida'), false);
+        }
+        callback(null, true);
+      },
     }),
   )
   @Post('file')
