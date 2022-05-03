@@ -79,7 +79,7 @@ export class CarsService {
       });
       this.photoRepository.save(photoUpdate);
     }
-    // //console.log(findPhotos, ' photos id buscados en la tabla');
+    // ////console.log(findPhotos, ' photos id buscados en la tabla');
 
     const carUpdate = await this.carsRepository.preload({
       id: +id,
@@ -108,7 +108,7 @@ export class CarsService {
 
   //Borra una photo dada por el Id
   async deletePhoto(id: string) {
-    console.log(id);
+    //console.log(id);
     const photo = await this.photoRepository.findOne(id);
     if (!photo) {
       throw new NotFoundException(
