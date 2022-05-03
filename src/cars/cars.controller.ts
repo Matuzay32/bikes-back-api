@@ -8,11 +8,17 @@ import {
   Post,
   // Protocol,
   Query,
+  UploadedFile,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { SampleDto } from './../common/sample.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -58,8 +64,26 @@ export class CarsController {
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
     return this.carsService.updateOnePhoto(id, updatePhotoDto);
   }
+
   @Post('photo/:id')
   createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
     return this.carsService.createOnePhoto(updatePhotoDto, id);
+  }
+
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, calback) => {
+          calback(null, `photo ${Date.now()}.jpg`);
+        },
+      }),
+    }),
+  )
+  @Post('file')
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return {
+      msg: `Archivo ${file.filename} cargado correctamente`,
+    };
   }
 }
