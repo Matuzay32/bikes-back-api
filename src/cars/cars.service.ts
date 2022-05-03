@@ -135,7 +135,37 @@ export class CarsService {
   }
 
   //Create Photos esto sirve para crear una photo
-  async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
+  // async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
+  //   const find = await this.carsRepository.findOne(id, {
+  //     relations: ['photos'],
+  //   });
+  //   if (!find) {
+  //     throw new NotFoundException(
+  //       `No se pudo encontrar el elemento con id(${id}) `,
+  //     );
+  //   }
+  //   const fotosActualizar = await createdPhotoDto;
+  //   const photos = await this.photoRepository.create(fotosActualizar);
+  //   const allPhotos = [...find.photos, ...photos];
+
+  //   const agreePhotosToCarsEntity = await this.carsRepository.create({
+  //     ...find,
+  //     photos: allPhotos,
+  //   });
+
+  //   const PhotosUpdated = await this.carsRepository.save(
+  //     agreePhotosToCarsEntity,
+  //   );
+  //   await this.photoRepository.save(photos);
+
+  //   return await PhotosUpdated;
+  // }
+
+  //este es el nuevo metodo Crea una imagen desde la base
+  async createOnePhoto(
+    /* createdPhotoDto: PhotoDto[], */ id: string,
+    fileName,
+  ) {
     const find = await this.carsRepository.findOne(id, {
       relations: ['photos'],
     });
@@ -144,9 +174,14 @@ export class CarsService {
         `No se pudo encontrar el elemento con id(${id}) `,
       );
     }
-    const fotosActualizar = await createdPhotoDto;
-    const photos = await this.photoRepository.create(fotosActualizar);
-    const allPhotos = [...find.photos, ...photos];
+    // const fotosActualizar = await createdPhotoDto;
+    console.log(fileName, 'este es mi file name');
+
+    // console.log(fotosActualizar);
+
+    const photos = await this.photoRepository.create({ url: fileName });
+    console.log(photos);
+    const allPhotos = [...find.photos, photos];
 
     const agreePhotosToCarsEntity = await this.carsRepository.create({
       ...find,

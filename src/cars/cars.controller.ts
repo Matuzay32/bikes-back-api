@@ -64,10 +64,10 @@ export class CarsController {
     return this.carsService.updateOnePhoto(id, updatePhotoDto);
   }
 
-  @Post('photo/:id')
-  createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
-    return this.carsService.createOnePhoto(updatePhotoDto, id);
-  }
+  // @Post('photo/:id')
+  // createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
+  //   return this.carsService.createOnePhoto(updatePhotoDto, id);
+  // }
 
   @UseInterceptors(
     FileInterceptor('file', {
@@ -92,5 +92,36 @@ export class CarsController {
     return {
       msg: `Archivo ${file.filename} cargado correctamente`,
     };
+  }
+
+  //Este es el nuevo metodo que guarda una imagen y manda el file name
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          callback(null, `${Date.now()}.jpg`);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        const nameOriginal = file.originalname.toLocaleLowerCase();
+        // //console.log(nameOriginal);
+        if (!nameOriginal.match(/(.gif|.png|.jpg|.jpeg)$/)) {
+          return callback(new Error('La extencion no es valida'), false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
+  @Post('photo/:id')
+  createOnePhoto(
+    @Param('id') id,
+    @Body() updatePhotoDto: PhotoDto[],
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.carsService.createOnePhoto(
+      /* updatePhotoDto, */ id,
+      file.filename,
+    );
   }
 }
