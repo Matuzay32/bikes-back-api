@@ -135,6 +135,7 @@ export class CarsService {
   }
 
   //Create Photos esto sirve para crear una photo
+
   // async createOnePhoto(createdPhotoDto: PhotoDto[], id: string) {
   //   const find = await this.carsRepository.findOne(id, {
   //     relations: ['photos'],
@@ -162,6 +163,7 @@ export class CarsService {
   // }
 
   //este es el nuevo metodo Crea una imagen desde la base
+
   async createOnePhoto(
     /* createdPhotoDto: PhotoDto[], */ id: string,
     fileName,
