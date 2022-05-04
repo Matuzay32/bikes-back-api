@@ -30,11 +30,6 @@ export class CarsController {
     return this.carsService.findAll(paginationQuery);
   }
 
-  // @Get()
-  // findAll(): Promise<CreateCarDto[]> {
-  //   return this.carsService.findAll();
-  // }
-
   @Get(':id')
   findOne(@Param() params) {
     return this.carsService.findOne(params.id);
