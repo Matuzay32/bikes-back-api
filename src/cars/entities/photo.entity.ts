@@ -18,9 +18,10 @@ export class Photo {
   url: string;
 
   @ManyToOne(() => Cars, (cars) => cars.photos, {
-    onDelete: 'CASCADE',
+    // onDelete: 'CASCADE',
     // onUpdate: 'CASCADE',
     // cascade: true,
+    orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'car_id' })
   cars: Cars;
