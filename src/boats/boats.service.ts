@@ -19,13 +19,14 @@ export class BoatsService {
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
   ) {}
-
-  async findAll(paginationQuery: PaginationQueryDto): Promise<CreateBoatDto[]> {
-    const { limit, offset } = paginationQuery;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+  ): Promise<CreateBoatDto[]> {
+    const { limit, offset } = paginationQueryDto;
     return await this.boatsRepository.find({
       relations: ['photos'],
-      take: limit,
       skip: offset,
+      take: limit,
     });
   }
 
@@ -44,30 +45,36 @@ export class BoatsService {
 
   async deleteOne(id: string) {
     const boat = await this.findOne(id);
+    if (!boat) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere borrar con id(${id}) `,
+      );
+    }
     return this.boatsRepository.remove(boat);
   }
 
   async updateOne(id: string, updateBoatDto: CreateBoatDto) {
     const item = await this.boatsRepository.findOne(
       id /* , {
-       relations: ['photos'],
-       ...updateBoatDto,
-     } */,
+      relations: ['photos'],
+      // ...updateCarDto,
+    } */,
     );
     if (!item) {
       throw new NotFoundException(
         `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
       );
     }
-    for (let index = 0; index < updateBoatDto.photos.length; index++) {
-      const photo = updateBoatDto.photos[index];
+    // for (let index = 0; index < updateCarDto.photos.length; index++) {
+    //   const photo = updateCarDto.photos[index];
 
-      const photoUpdate = await this.photoRepository.preload({
-        id: +photo.id,
-        url: photo.url,
-      });
-      this.photoRepository.save(photoUpdate);
-    }
+    //   const photoUpdate = await this.photoRepository.preload({
+    //     id: +photo.id,
+    //     url: photo.url,
+    //   });
+    //   this.photoRepository.save(photoUpdate);
+    // }
+    // ////console.log(findPhotos, ' photos id buscados en la tabla');
 
     const boatUpdate = await this.boatsRepository.preload({
       id: +id,
@@ -77,27 +84,26 @@ export class BoatsService {
     return this.boatsRepository.save(boatUpdate);
   }
 
-  async create(createBoatDto: CreateBoatDto[]) {
-    createBoatDto.map(async (createBoatDto) => {
-      const arrayFotos = await createBoatDto.photos;
-      // console.log(arrayFotos);
+  async create(CreateBoatDto: CreateBoatDto[]) {
+    CreateBoatDto.map(async (CreateBoatDto) => {
+      // const arrayFotos = await CreateBoatDto.photos;
       const boat = await this.boatsRepository.create({
-        ...createBoatDto,
-        photos: createBoatDto.photos,
+        ...CreateBoatDto,
+        photos: CreateBoatDto.photos,
       });
-      const photos = await this.photoRepository.create(arrayFotos);
+      // const photos = await this.photoRepository.create(arrayFotos);
 
       const boatGuardado = await this.boatsRepository.save(boat);
-      await this.photoRepository.save(photos);
+      // await this.photoRepository.save(photos);
 
       return await boatGuardado;
     });
-    return await createBoatDto;
+    return await CreateBoatDto;
   }
 
   //Borra una photo dada por el Id
   async deletePhoto(id: string) {
-    console.log(id);
+    //console.log(id);
     const photo = await this.photoRepository.findOne(id);
     if (!photo) {
       throw new NotFoundException(
@@ -137,13 +143,13 @@ export class BoatsService {
     const photos = await this.photoRepository.create(fotosActualizar);
     const allPhotos = [...find.photos, ...photos];
 
-    const agreePhotosToBoatsEntity = await this.boatsRepository.create({
+    const agreePhotosToBikeEntity = await this.boatsRepository.create({
       ...find,
       photos: allPhotos,
     });
 
     const PhotosUpdated = await this.boatsRepository.save(
-      agreePhotosToBoatsEntity,
+      agreePhotosToBikeEntity,
     );
     await this.photoRepository.save(photos);
 

@@ -70,15 +70,15 @@ export class CarsService {
         `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
       );
     }
-    for (let index = 0; index < updateCarDto.photos.length; index++) {
-      const photo = updateCarDto.photos[index];
+    // for (let index = 0; index < updateCarDto.photos.length; index++) {
+    //   const photo = updateCarDto.photos[index];
 
-      const photoUpdate = await this.photoRepository.preload({
-        id: +photo.id,
-        url: photo.url,
-      });
-      this.photoRepository.save(photoUpdate);
-    }
+    //   const photoUpdate = await this.photoRepository.preload({
+    //     id: +photo.id,
+    //     url: photo.url,
+    //   });
+    //   this.photoRepository.save(photoUpdate);
+    // }
     // ////console.log(findPhotos, ' photos id buscados en la tabla');
 
     const carUpdate = await this.carsRepository.preload({
@@ -91,15 +91,15 @@ export class CarsService {
 
   async create(createCarDto: CreateCarDto[]) {
     createCarDto.map(async (createCarDto) => {
-      const arrayFotos = await createCarDto.photos;
+      // const arrayFotos = await createCarDto.photos;
       const car = await this.carsRepository.create({
         ...createCarDto,
         photos: createCarDto.photos,
       });
-      const photos = await this.photoRepository.create(arrayFotos);
+      // const photos = await this.photoRepository.create(arrayFotos);
 
       const carGuardado = await this.carsRepository.save(car);
-      await this.photoRepository.save(photos);
+      // await this.photoRepository.save(photos);
 
       return await carGuardado;
     });

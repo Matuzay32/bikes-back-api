@@ -20,12 +20,14 @@ export class FarmsService {
     private readonly photoRepository: Repository<Photo>,
   ) {}
 
-  async findAll(paginationQuery: PaginationQueryDto): Promise<CreateFarmDto[]> {
-    const { limit, offset } = paginationQuery;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+  ): Promise<CreateFarmDto[]> {
+    const { limit, offset } = paginationQueryDto;
     return await this.farmsRepository.find({
       relations: ['photos'],
-      take: limit,
       skip: offset,
+      take: limit,
     });
   }
 
@@ -44,60 +46,65 @@ export class FarmsService {
 
   async deleteOne(id: string) {
     const farm = await this.findOne(id);
+    if (!farm) {
+      throw new NotFoundException(
+        `No se pudo encontrar el elemento que quiere borrar con id(${id}) `,
+      );
+    }
     return this.farmsRepository.remove(farm);
   }
 
   async updateOne(id: string, updateFarmDto: CreateFarmDto) {
     const item = await this.farmsRepository.findOne(
       id /* , {
-       relations: ['photos'],
-       ...updateFarmDto,
-     } */,
+                                                        relations: ['photos'],
+                                                        // ...updateCarDto,
+                                                      } */,
     );
     if (!item) {
       throw new NotFoundException(
         `No se pudo encontrar el elemento que quiere actualizar con id(${id}) `,
       );
     }
-    for (let index = 0; index < updateFarmDto.photos.length; index++) {
-      const photo = updateFarmDto.photos[index];
+    // for (let index = 0; index < updateCarDto.photos.length; index++) {
+    //   const photo = updateCarDto.photos[index];
 
-      const photoUpdate = await this.photoRepository.preload({
-        id: +photo.id,
-        url: photo.url,
-      });
-      this.photoRepository.save(photoUpdate);
-    }
+    //   const photoUpdate = await this.photoRepository.preload({
+    //     id: +photo.id,
+    //     url: photo.url,
+    //   });
+    //   this.photoRepository.save(photoUpdate);
+    // }
+    // ////console.log(findPhotos, ' photos id buscados en la tabla');
 
-    const farmUpdate = await this.farmsRepository.preload({
+    const carUpdate = await this.farmsRepository.preload({
       id: +id,
       ...updateFarmDto,
     });
 
-    return this.farmsRepository.save(farmUpdate);
+    return this.farmsRepository.save(carUpdate);
   }
 
-  async create(createFarmDto: CreateFarmDto[]) {
-    createFarmDto.map(async (createFarmDto) => {
-      const arrayFotos = await createFarmDto.photos;
-      //console.log(arrayFotos);
-      const farm = await this.farmsRepository.create({
-        ...createFarmDto,
-        photos: createFarmDto.photos,
+  async create(CreateFarmDto: CreateFarmDto[]) {
+    CreateFarmDto.map(async (CreateFarmDto) => {
+      // const arrayFotos = await CreateFarmDto.photos;
+      const car = await this.farmsRepository.create({
+        ...CreateFarmDto,
+        photos: CreateFarmDto.photos,
       });
-      const photos = await this.photoRepository.create(arrayFotos);
+      // const photos = await this.photoRepository.create(arrayFotos);
 
-      const farmGuardado = await this.farmsRepository.save(farm);
-      await this.photoRepository.save(photos);
+      const carGuardado = await this.farmsRepository.save(car);
+      // await this.photoRepository.save(photos);
 
-      return await farmGuardado;
+      return await carGuardado;
     });
-    return await createFarmDto;
+    return await CreateFarmDto;
   }
 
   //Borra una photo dada por el Id
   async deletePhoto(id: string) {
-    console.log(id);
+    //console.log(id);
     const photo = await this.photoRepository.findOne(id);
     if (!photo) {
       throw new NotFoundException(
@@ -137,13 +144,13 @@ export class FarmsService {
     const photos = await this.photoRepository.create(fotosActualizar);
     const allPhotos = [...find.photos, ...photos];
 
-    const agreePhotosTofarmsEntity = await this.farmsRepository.create({
+    const agreePhotosToFarmsEntity = await this.farmsRepository.create({
       ...find,
       photos: allPhotos,
     });
 
     const PhotosUpdated = await this.farmsRepository.save(
-      agreePhotosTofarmsEntity,
+      agreePhotosToFarmsEntity,
     );
     await this.photoRepository.save(photos);
 
