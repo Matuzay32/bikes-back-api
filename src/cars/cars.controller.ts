@@ -10,6 +10,7 @@ import {
   Post,
   // Protocol,
   Query,
+  Res,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
@@ -21,6 +22,8 @@ import { PhotoDto } from './../common/dto/create-photo.dto';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import { Observable, of } from 'rxjs';
+import { join } from 'path';
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
@@ -126,5 +129,13 @@ export class CarsController {
     return files.map((item) => {
       return { url: item.filename };
     });
+  }
+
+  @Get('uploads/:imagename')
+  findProfileImage(@Param() params, @Res() res) /* : Observable<Object>  */ {
+    console.log(params);
+    const { imagename } = params;
+
+    return of(res.sendFile(join(process.cwd(), `uploads/${imagename}`)));
   }
 }
