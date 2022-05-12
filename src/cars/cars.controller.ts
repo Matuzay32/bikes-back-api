@@ -94,7 +94,7 @@ export class CarsController {
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      file: `Archivo ${file.filename} cargado correctamente`,
+      url: `Archivo ${file.filename} cargado correctamente`,
     };
   }
   //Upload multiple files
@@ -124,7 +124,7 @@ export class CarsController {
   )
   uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     return files.map((item) => {
-      return { file: item.filename };
+      return { url: item.filename };
     });
   }
 }
