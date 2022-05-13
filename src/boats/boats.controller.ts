@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,15 +22,15 @@ import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { of } from 'rxjs';
+import { join } from 'path';
 
 @Controller('boats')
 export class BoatsController {
   constructor(private readonly boatsService: BoatsService) {}
 
   @Get()
-  findAll(
-    @Query() paginationQuery: PaginationQueryDto,
-  ): Promise<CreateBoatDto[]> {
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.boatsService.findAll(paginationQuery);
   }
 
@@ -48,13 +50,13 @@ export class BoatsController {
   }
 
   @Post()
-  create(@Body() createBoatDto: CreateBoatDto[]) {
-    return this.boatsService.create(createBoatDto);
+  create(@Body() CreateBoatDto: CreateBoatDto[]) {
+    return this.boatsService.create(CreateBoatDto);
   }
 
   @Delete('photo/:id')
   deletePhoto(@Param() params) {
-    console.log(params.id);
+    //console.log(params.id);
     return this.boatsService.deletePhoto(params.id);
   }
 
@@ -62,6 +64,7 @@ export class BoatsController {
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
     return this.boatsService.updateOnePhoto(id, updatePhotoDto);
   }
+
   @Post('photo/:id')
   createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
     return this.boatsService.createOnePhoto(updatePhotoDto, id);
@@ -93,9 +96,9 @@ export class BoatsController {
       },
     }),
   )
-  uploadFile(@UploadedFiles() file: Express.Multer.File) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      file: `Archivo ${file.originalname} cargado correctamente`,
+      url: `Archivo ${file.filename} cargado correctamente`,
     };
   }
   //Upload multiple files
@@ -125,7 +128,15 @@ export class BoatsController {
   )
   uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     return files.map((item) => {
-      return { file: item.originalname };
+      return { url: item.filename };
     });
+  }
+
+  @Get('uploads/:imagename')
+  findProfileImage(@Param() params, @Res() res) /* : Observable<Object>  */ {
+    console.log(params);
+    const { imagename } = params;
+
+    return of(res.sendFile(join(process.cwd(), `uploads/${imagename}`)));
   }
 }

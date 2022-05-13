@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,15 +22,15 @@ import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { of } from 'rxjs';
+import { join } from 'path';
 
 @Controller('bikes')
 export class BikesController {
   constructor(private readonly bikesService: BikesService) {}
 
   @Get()
-  findAll(
-    @Query() paginationQuery: PaginationQueryDto,
-  ): Promise<CreateBikeDto[]> {
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.bikesService.findAll(paginationQuery);
   }
 
@@ -43,18 +45,18 @@ export class BikesController {
   }
 
   @Patch(':id')
-  updateOne(@Param('id') id: string, @Body() updateCarDto: CreateBikeDto) {
-    return this.bikesService.updateOne(id, updateCarDto);
+  updateOne(@Param('id') id: string, @Body() updateBikeDto: CreateBikeDto) {
+    return this.bikesService.updateOne(id, updateBikeDto);
   }
 
   @Post()
-  create(@Body() createBikeDto: CreateBikeDto[]) {
-    return this.bikesService.create(createBikeDto);
+  create(@Body() CreateBikeDto: CreateBikeDto[]) {
+    return this.bikesService.create(CreateBikeDto);
   }
 
   @Delete('photo/:id')
   deletePhoto(@Param() params) {
-    console.log(params.id);
+    //console.log(params.id);
     return this.bikesService.deletePhoto(params.id);
   }
 
@@ -62,6 +64,7 @@ export class BikesController {
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
     return this.bikesService.updateOnePhoto(id, updatePhotoDto);
   }
+
   @Post('photo/:id')
   createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
     return this.bikesService.createOnePhoto(updatePhotoDto, id);
@@ -93,9 +96,9 @@ export class BikesController {
       },
     }),
   )
-  uploadFile(@UploadedFiles() file: Express.Multer.File) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      file: `Archivo ${file.originalname} cargado correctamente`,
+      url: `Archivo ${file.filename} cargado correctamente`,
     };
   }
   //Upload multiple files
@@ -125,7 +128,15 @@ export class BikesController {
   )
   uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     return files.map((item) => {
-      return { file: item.originalname };
+      return { url: item.filename };
     });
+  }
+
+  @Get('uploads/:imagename')
+  findProfileImage(@Param() params, @Res() res) /* : Observable<Object>  */ {
+    console.log(params);
+    const { imagename } = params;
+
+    return of(res.sendFile(join(process.cwd(), `uploads/${imagename}`)));
   }
 }

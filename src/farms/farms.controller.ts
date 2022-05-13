@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,15 +21,14 @@ import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 import { PhotoDto } from './../common/dto/create-photo.dto';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { join } from 'path';
+import { of } from 'rxjs';
 
 @Controller('farms')
 export class FarmsController {
   constructor(private readonly farmsService: FarmsService) {}
-
   @Get()
-  findAll(
-    @Query() paginationQuery: PaginationQueryDto,
-  ): Promise<CreateFarmDto[]> {
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.farmsService.findAll(paginationQuery);
   }
 
@@ -47,13 +48,13 @@ export class FarmsController {
   }
 
   @Post()
-  create(@Body() createFarmDto: CreateFarmDto[]) {
-    return this.farmsService.create(createFarmDto);
+  create(@Body() CreateFarmDto: CreateFarmDto[]) {
+    return this.farmsService.create(CreateFarmDto);
   }
 
   @Delete('photo/:id')
   deletePhoto(@Param() params) {
-    console.log(params.id);
+    //console.log(params.id);
     return this.farmsService.deletePhoto(params.id);
   }
 
@@ -61,10 +62,12 @@ export class FarmsController {
   updateOnePhoto(@Param('id') id: string, @Body() updatePhotoDto: PhotoDto) {
     return this.farmsService.updateOnePhoto(id, updatePhotoDto);
   }
+
   @Post('photo/:id')
   createOnePhoto(@Param('id') id, @Body() updatePhotoDto: PhotoDto[]) {
     return this.farmsService.createOnePhoto(updatePhotoDto, id);
   }
+
   //Upload one file
   @Post('file')
   @UseInterceptors(
@@ -91,9 +94,9 @@ export class FarmsController {
       },
     }),
   )
-  uploadFile(@UploadedFiles() file: Express.Multer.File) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      file: `Archivo ${file.originalname} cargado correctamente`,
+      url: `Archivo ${file.filename} cargado correctamente`,
     };
   }
   //Upload multiple files
@@ -123,7 +126,15 @@ export class FarmsController {
   )
   uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     return files.map((item) => {
-      return { file: item.originalname };
+      return { url: item.filename };
     });
+  }
+
+  @Get('uploads/:imagename')
+  findProfileImage(@Param() params, @Res() res) /* : Observable<Object>  */ {
+    console.log(params);
+    const { imagename } = params;
+
+    return of(res.sendFile(join(process.cwd(), `uploads/${imagename}`)));
   }
 }
