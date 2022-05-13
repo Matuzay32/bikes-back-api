@@ -137,4 +137,9 @@ export class FarmsController {
 
     return of(res.sendFile(join(process.cwd(), `uploads/${imagename}`)));
   }
+
+  //git viendo de revertir el comit al anterior
+  //git viendo de revertir el comit al anterior
+  //git viendo de revertir el comit al anterior
+  //git viendo de revertir el comit al anterior
 }
