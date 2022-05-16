@@ -14,11 +14,11 @@ import { FarmsModule } from './farms/farms.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'Matuzay2018',
+      password: 'password',
       database: 'prueba',
       autoLoadEntities: true, // models will be loaded automatically
       // entities: [Cars, Photo],
-      // synchronize: true,
+       synchronize: true,
     }),
     CarsModule,
     BikesModule,
